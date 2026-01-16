@@ -1,2 +1,2 @@
 # Racket
-fick racket!
+![FCK RCKT](./FCKRCKT.png)
