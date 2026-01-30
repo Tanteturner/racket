@@ -1,0 +1,14 @@
+a) (first '((A) B C D))	= '(A)
+b) (rest '((A)(B C D)))	= '(B C D)		falsch -> '((B C D))
+c) (cons '(A B) '(A B))	= '((A B) (A B))	falsch -> '(A B (A B))
+d) (cons 'A '())	= '(A ()) 		falsch -> '(A)
+e) (first '(((A))))	= Error 		falsch -> '((A))
+f) (rest '(((A))))	= Error 		falsch -> '()
+g) (cons '((A)) empty)	= '(() ((A)))		falsch -> (((A)))
+h) (equal? 'X1 'X2)	= #f
+i) (equal? '(X1) 'X2)	= #f
+j) (equal? '(X1) '(X2)) = #f
+k) (list? 'X1)		= #f
+l) (list? '(X1))	= #t
+m) (empty? '())		= #t
+n) (empty? '(()))	= #f
