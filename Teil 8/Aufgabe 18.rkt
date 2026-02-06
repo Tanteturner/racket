@@ -8,32 +8,55 @@
 
 ;; Tests
 (check-expect (concatenate '() '()) '())
-(check-expect (concatenate (cons 'a '()) (cons 'b '())) (cons 'b (cons 'a '())))
-(check-expect (concatenate (cons 'a (cons 'b '())) (cons 'c (cons 'd '()))) (cons 'd (cons 'c (cons 'a (cons 'b '())))))
+(check-expect (concatenate '(a) '(b)) '(a b))
+(check-expect (concatenate '(a b c) '(d e f)) '(a b c d e f))
 
 (define concatenate
   (lambda [list-a list-b]
     (cond
-      [(empty? list-b) list-a]
-      [else (concatenate
-             (cons (first list-b) list-a)
-             (rest list-b))])))
+      [(empty? list-a) list-b]
+      [else (cons (first list-a) (concatenate (rest list-a) list-b))])))
+
+;; lvz ist eine Liste von zahlen. Sie ist entweder:
+;; - empty
+;; - eine Zahl mit einer lvz
 
 ;; b) mult-2-lvz gibt eine lvz zurück, die als elemente die produkte der jeweiligen elemente zweier gleichlanger lvz enthält
 ;;    lvz, lvz -> lvz
 
 ;; Tests
 (check-expect (mult-2-lvz '() '()) '())
-(check-expect (mult-2-lvz (list 1) (list 2)) (list 2))
-(check-expect (mult-2-lvz (list 1 3) (list 2 4)) (list 2 12))
+(check-expect (mult-2-lvz '(1) '(2)) '(2))
+(check-expect (mult-2-lvz '(1 3) '(2 4)) '(2 12))
 
 (define mult-2-lvz
   (lambda [list-a list-b]
     (cond
-      [(or (empty? list-a) (empty? list-b)) empty]
+      [(empty? list-a) empty]
       [else
        (cons
         (*(first list-a) (first list-b))
         (mult-2-lvz (rest list-a) (rest list-b)))])))
 
-;; c) 
+;; c) merge nimmt zwei sortierte lvz an und gibt eine Liste aller Zahlen der Eingabelisten in sortierter Reihenfolge zurück
+;; merge: lvz, lvz -> lvz
+
+;; Tests:
+(check-expect (merge '() '()) '())
+(check-expect (merge '(1) '()) '(1))
+(check-expect (merge '() '(1)) '(1))
+(check-expect (merge '(1 2 4 6) '(1 3 5)) '(1 1 2 3 4 5 6))
+
+(define merge
+  (lambda [list-a list-b]
+    (cond
+      [(and (empty? list-a) (empty? list-b)) empty]
+      [(and (cons? list-a) (empty? list-b)) list-a]
+      [(and (empty? list-a) (cons? list-b)) list-b]
+      [else
+       (cond
+         [(< (first list-a) (first list-b))
+          (cons (first list-a) (merge (rest list-a) list-b))]
+         [else
+          (cons (first list-b) (merge list-a (rest list-b)))])])))
+
